@@ -144,10 +144,11 @@ impl LayoutData {
         for finger in &kb.keys.map {
             let mut chars: Vec<char> = vec![];
             for _ in finger {
-                let key = corpus.uncorpus_unigram(layout.0[i]);
-                if key != '\0' {
-                    chars.push(key);
+                let mut key = corpus.uncorpus_unigram(layout.0[i]);
+                if key == '\0' {
+                    key = '\u{fffd}';
                 }
+                chars.push(key);
                 i += 1;
             }
             if !chars.is_empty() {
@@ -160,10 +161,10 @@ impl LayoutData {
         }
         for combo in &kb.combos {
             let kc = &combo.coords[0];
-            let key = corpus.uncorpus_unigram(layout.0[i]);
+            let mut key = corpus.uncorpus_unigram(layout.0[i]);
             i += 1;
             if key == '\0' {
-                continue;
+                key = '\u{fffd}';
             }
             components.push(KeyComponent {
                 finger: combo.coords.iter().map(|coord| coord.finger).collect(),
